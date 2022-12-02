@@ -84,6 +84,7 @@
             <version>5.8.0.M4</version>
         </dependency>
 
+        <!--   idea provide运行参数要勾上  -->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-clients</artifactId>
@@ -134,6 +135,7 @@
             <version>${lombok.version}</version>
         </dependency>
 
+        <!--        自定义工具包  -->
         <dependency>
             <groupId>com.ijavac</groupId>
             <artifactId>flink-common-util</artifactId>

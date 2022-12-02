@@ -61,8 +61,10 @@ public class StreamWordCountDemo {
                 })
                 // 聚合
                 .sum(1)
+                // sink
                 .print();
 
+        // 启动
         environment.execute();
     }
 }
