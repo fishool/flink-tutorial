@@ -16,7 +16,7 @@ import org.apache.flink.util.Collector;
  * @date: 2022-12-02 10:26
  * @Description: 基于flink 实时处理快速入门
  */
-public class WordCountDemo {
+public class StreamWordCountDemo {
 
 
     public static void main(String[] args) throws Exception {
