@@ -128,6 +128,14 @@
             <artifactId>log4j-layout-template-json</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-jcl -->
+
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+            <!-- 仅限本地开发环境调测使用，flink部署环境已带 -->
+        </dependency>
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -2,6 +2,7 @@ package com.ijavac.demo.flink.serialization;
 
 
 import com.ijavac.demo.flink.module.KafkaDemo;
+import org.apache.flink.api.common.serialization.AbstractDeserializationSchema;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.PropertyAccessor;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.DeserializationFeature;
@@ -15,7 +16,7 @@ import java.io.IOException;
  * @version 1.0
  * @date 2022/4/7 15:30
  */
-public class KafkaDemoDeserialization extends org.apache.flink.api.common.serialization.AbstractDeserializationSchema<KafkaDemo> {
+public class KafkaDemoDeserialization extends AbstractDeserializationSchema<KafkaDemo> {
     private final ObjectMapper objectMapper;
 
     public KafkaDemoDeserialization() {
