@@ -35,15 +35,16 @@ import org.slf4j.LoggerFactory;
 /**
  * flink 自带的source和sink
  * https://nightlies.apache.org/flink/flink-docs-release-1.16/zh/docs/connectors/datastream/overview/
- * @description
+ *
  * @author shichao
+ * @description
  * @date 2022/12/5 16:01
  * @return
  */
 public class KafkaEsDemo {
     private static final Logger log = LoggerFactory.getLogger(KafkaEsDemo.class);
     private static final String application = "kafka-demo";
-    private static final ObjectMapper objectMapper ;
+    private static final ObjectMapper objectMapper;
 
     static {
         objectMapper = JsonMapper.builder().build();
@@ -54,6 +55,9 @@ public class KafkaEsDemo {
     public static void main(String[] args) throws Exception {
 
         // 获取命令行参数
+        /**
+         --kafka_bootstrap_servers 192.168.200.132:9092 --kafka_topic_input flink_to_es --elasticsearch_hosts http://192.168.200.132:9200
+         */
         ParameterTool tool = ParameterTool.fromArgs(args);
         JobParameters parameters = JobParameters.getInstance(tool);
         log.info("parameters: {}", parameters);
@@ -70,7 +74,7 @@ public class KafkaEsDemo {
         checkpointConfig.setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
         checkpointConfig.setCheckpointInterval(5 * 60 * 1000);
         checkpointConfig.setMinPauseBetweenCheckpoints(60 * 1000);
-        checkpointConfig.setCheckpointTimeout(60 * 60 *1000);
+        checkpointConfig.setCheckpointTimeout(60 * 60 * 1000);
 
 
         KafkaSource<KafkaDemo> source = KafkaSource.<KafkaDemo>builder()
@@ -78,7 +82,7 @@ public class KafkaEsDemo {
                 .setTopics(parameters.getKafkaTopicInput())
                 // discover new partitions per 10 seconds
                 .setProperty("partition.discovery.interval.ms", "10000")
-                .setProperty("commit.offsets.on.checkpoint","true")
+                .setProperty("commit.offsets.on.checkpoint", "true")
                 .setGroupId(application + "-" + "group-id-kafka-source")
                 .setClientIdPrefix(application + "-" + "client-id-kafka-source")
                 // 默认从已提交的偏移地址开始消费
@@ -103,7 +107,7 @@ public class KafkaEsDemo {
             public KafkaDemo map(KafkaDemo kafkaDemo) throws Exception {
                 log.info("kafkaDemo: {}", kafkaDemo);
                 // 模拟业务处理
-                kafkaDemo.setTenantName("tenantName"+ DateUtil.now());
+                kafkaDemo.setTenantName("tenantName" + DateUtil.now());
                 return kafkaDemo;
             }
         });
@@ -114,6 +118,8 @@ public class KafkaEsDemo {
                 .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                 .setHosts(parameters.getElasticsearchHosts().toArray(
                         new HttpHost[parameters.getElasticsearchHosts().size()]))
+                .setConnectionUsername("elastic")
+                .setConnectionPassword("elastic")
                 // 这里启用了一个指数退避重试策略，初始延迟为 1000 毫秒且最大重试次数为 5
                 .setBulkFlushBackoffStrategy(FlushBackoffType.EXPONENTIAL, 5, 1000)
                 // 刷新的时间间隔5000 毫秒
