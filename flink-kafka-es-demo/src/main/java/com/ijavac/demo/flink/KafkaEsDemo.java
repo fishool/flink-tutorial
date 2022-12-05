@@ -112,9 +112,8 @@ public class KafkaEsDemo {
             }
         });
 
-
         // es sink
-        ElasticsearchSink sink = new Elasticsearch7SinkBuilder<KafkaDemo>()
+        ElasticsearchSink<KafkaDemo> sink = new Elasticsearch7SinkBuilder<KafkaDemo>()
                 .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                 .setHosts(parameters.getElasticsearchHosts().toArray(
                         new HttpHost[parameters.getElasticsearchHosts().size()]))
