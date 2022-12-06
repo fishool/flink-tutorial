@@ -2,6 +2,7 @@ package com.ijavac.flink.character.character05;
 
 import com.ijavac.flink.character.character05.function.AccessParallelSource;
 import com.ijavac.flink.character.character05.function.AccessSource;
+import com.ijavac.flink.character.character05.function.MysqlSimpleLogDemoSource;
 import com.ijavac.flink.character.character05.function.PKMapFunction;
 import com.ijavac.flink.model.SimpleLogDemo;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -20,8 +21,15 @@ public class TransformationApp {
 //        richMap(env)
         // 自定义SourceFunction (单并行度)
 //        sourceFunction(env);
-        parallelSourceFunction(env);
+//        parallelSourceFunction(env);
+        // 自定义mysql Source
+        mysqlSimpleLogSource(env);
         env.execute("TransformationApp");
+    }
+
+    private static void mysqlSimpleLogSource(StreamExecutionEnvironment env) {
+        DataStreamSource<SimpleLogDemo> simpleLogDemoDataStreamSource = env.addSource(new MysqlSimpleLogDemoSource());
+        simpleLogDemoDataStreamSource.print();
     }
 
     private static void parallelSourceFunction(StreamExecutionEnvironment env) {
