@@ -7,6 +7,7 @@ import com.ijavac.flink.character.character05.function.PKMapFunction;
 import com.ijavac.flink.character.character05.partitioner.PKPartitioner;
 import com.ijavac.flink.model.SimpleLogDemo;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.ConnectedStreams;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -34,9 +35,10 @@ import org.apache.flink.streaming.api.functions.co.CoMapFunction;
  * Connect “连接” 两个数据流并保留各自的类型。connect 允许在两个流的处理逻辑之间共享状态。
  * CoMap, CoFlatMap 类似于在连接的数据流上进行 map 和 flatMap。
  * Cache 把算子的结果缓存起来。目前只支持批执行模式下运行的作业。算子的结果在算子第一次执行的时候会被缓存起来，之后的 作业中会复用该算子缓存的结果。如果算子的结果丢失了，它会被原来的算子重新计算并缓存
- *
+ * <p>
  * 旁路输出
  * https://nightlies.apache.org/flink/flink-docs-release-1.16/zh/docs/dev/datastream/side_output/
+ *
  * @author shichao
  * @description
  * @date 2022/12/5 17:24
@@ -69,13 +71,8 @@ public class TransformationApp {
                 return Tuple2.of(value.getHost(), value);
             }
         });
-        map.partitionCustom(new PKPartitioner(),0)
-                .map(new MapFunction<Tuple2<String, SimpleLogDemo>, String>() {
-                    @Override
-                    public String map(Tuple2<String, SimpleLogDemo> value) throws Exception {
-                        return value.f0 + " : " + value.f1;
-                    }
-                }).print();
+        map.partitionCustom(new PKPartitioner(), (KeySelector<Tuple2<String, SimpleLogDemo>, String>) value -> value.f0)
+                .map((MapFunction<Tuple2<String, SimpleLogDemo>, String>) value -> value.f0 + " : " + value.f1).print();
     }
 
     private static void connect(StreamExecutionEnvironment env) {
@@ -92,18 +89,19 @@ public class TransformationApp {
         // CoMapFunction 两个流的数据类型可以不一致, 但是返回的数据类型必须一致
         SingleOutputStreamOperator<String> map = connect.map(
                 new CoMapFunction<SimpleLogDemo, Tuple2<String, SimpleLogDemo>, String>() {
-            @Override
-            public String map1(SimpleLogDemo value) throws Exception {
-                return value.toString();
-            }
+                    @Override
+                    public String map1(SimpleLogDemo value) throws Exception {
+                        return value.toString();
+                    }
 
-            @Override
-            public String map2(Tuple2<String, SimpleLogDemo> value) throws Exception {
-                return value.f0 + value.toString();
-            }
-        });
+                    @Override
+                    public String map2(Tuple2<String, SimpleLogDemo> value) throws Exception {
+                        return value.f0 + value.toString();
+                    }
+                });
         map.print();
     }
+
     private static void union(StreamExecutionEnvironment env) {
         DataStreamSource<String> dataStreamSource9527 = env.socketTextStream("192.168.200.132", 9527);
         DataStreamSource<String> dataStreamSource9628 = env.socketTextStream("192.168.200.132", 9528);
@@ -140,7 +138,6 @@ public class TransformationApp {
                 = textFileSource.map(new PKMapFunction());
 
         map.print();
-
 
 
     }
