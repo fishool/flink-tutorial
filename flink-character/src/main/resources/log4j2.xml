@@ -18,7 +18,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
             <Filters>
-                <ThresholdFilter level="DEBUG" onMatch="ACCEPT"
+                <ThresholdFilter level="WARN" onMatch="ACCEPT"
                                  onMismatch="DENY"/>
             </Filters>
             <!--输出日志的格式 -->

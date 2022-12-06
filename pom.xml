@@ -19,7 +19,7 @@
 
     <modules>
         <module>flink-kafka-es-demo</module>
-        <module>demo1-word-count</module>
+        <module>flink-character</module>
         <module>flink-common-util</module>
     </modules>
 

@@ -1,4 +1,4 @@
-package com.ijavac.flink.character.four;
+package com.ijavac.flink.character.character04;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
