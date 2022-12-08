@@ -1,6 +1,5 @@
 package com.ijavac.flink.character.character07;
 
-import cn.hutool.core.date.DateUtil;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -47,7 +46,7 @@ public class WindowApp {
                 .assignTimestampsAndWatermarks(
                         WatermarkStrategy.<Tuple2<String, Integer>>forMonotonousTimestamps()
                                 // 在event中获取时间戳 单位毫秒
-                                .withTimestampAssigner((event, timestamp) -> DateUtil.date().getTime() ));
+                                .withTimestampAssigner((event, timestamp) -> System.currentTimeMillis() ));
 
         afterWater.keyBy((KeySelector<Tuple2<String, Integer>, String>) value -> value.f0)
                 // 指定事件水印
