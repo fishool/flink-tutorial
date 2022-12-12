@@ -51,14 +51,15 @@ public class WindowApp {
                 // 指定事件水印
                 .assignTimestampsAndWatermarks(
                         WatermarkStrategy
-                                // 乱序水印延时 允许5s延时
-                                .<Tuple2<String, Integer>>forBoundedOutOfOrderness(Duration.ofSeconds(5))
+                                // 乱序水印延时 允许3s延时
+                                .<Tuple2<String, Integer>>forBoundedOutOfOrderness(Duration.ofSeconds(3))
                                 // 在event中获取事件时间戳与窗口起始时间戳的差值 单位毫秒
                                 .withTimestampAssigner((event, timestamp) -> {
                                     // 模拟从event中获取的事件时间戳
                                     long current = System.currentTimeMillis();
-                                    // 已今天为窗口起始锚点
+                                    // 以每天开始时间为窗口起始锚点
                                     long dateTime = DateUtil.beginOfDay(DateUtil.date()).getTime();
+                                    // 返回差值 用于判定窗口位置 [0, 5000) [5000, 10000)
                                     return current - dateTime;
                                 }));
 
@@ -67,8 +68,8 @@ public class WindowApp {
                 // 使用事件时间滚动窗口 5s
                 // [0, 5000) [5000, 10000)
                 .window(TumblingEventTimeWindows.of(Time.seconds(5)))
-                // 窗口允许最大延时  5s
-                .allowedLateness(Time.seconds(5))
+                // 窗口允许最大延时  3s
+                .allowedLateness(Time.seconds(3))
                 .sum(1)
                 .print();
     }
