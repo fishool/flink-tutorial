@@ -9,6 +9,8 @@ import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.common.RuntimeExecutionMode;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.restartstrategy.RestartStrategies;
+import org.apache.flink.api.common.time.Time;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.connector.base.DeliveryGuarantee;
 import org.apache.flink.connector.elasticsearch.sink.Elasticsearch7SinkBuilder;
@@ -30,6 +32,8 @@ import org.apache.http.HttpHost;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -64,6 +68,13 @@ public class KafkaEsDemo {
 
         // 运行环境配置
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+        // 配置重启策略
+        // 如果程序没有启用 Checkpoint，则采用不重启策略，
+        // 如果开启了 Checkpoint 且没有设置重启策略，那么采用固定延时重启策略，最大重启次数为 Integer.MAX_VALUE。
+        env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3, Time.of(5, TimeUnit.SECONDS)));
+        // env.setRestartStrategy(RestartStrategies.noRestart());
+
         env.setParallelism(2);
         env.setRuntimeMode(RuntimeExecutionMode.STREAMING);
         env.getConfig().setAutoWatermarkInterval(3000);
