@@ -42,7 +42,7 @@ public class WindowApp {
                 = dataStreamSource.map(new MapFunction<String, Tuple2<String, Integer>>() {
             @Override
             public Tuple2<String, Integer> map(String value) throws Exception {
-                return Tuple2.of(value, 1);
+                return Tuple2.of(DateUtil.now(), 1);
             }
         });
 
