@@ -1,6 +1,7 @@
 package com.ijavac.demo.flink.module;
 
 
+import cn.hutool.json.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,7 @@ public class KafkaDemo {
     protected String dpName;
     protected String dpAddress;
     protected Long dateTime;
+    // https://toutiao.io/posts/x55lkqo/preview
+    protected JSONObject errorData;
 
 }
