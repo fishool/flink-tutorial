@@ -144,11 +144,7 @@
         </dependency>
 
         <!--        自定义工具包  -->
-        <dependency>
-            <groupId>com.ijavac</groupId>
-            <artifactId>flink-common-util</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+
     </dependencies>
 
 </project>
