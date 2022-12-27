@@ -1,5 +1,5 @@
 #!/bin/bash
-flinkpath=/root/flink-1.16.0
+flinkpath=/data/flink/flink-1.16.0
 appName=mp-flink-cleaning-1.0-SNAPSHOT.jar
 mainClass=com.jxtii.kong.job.KongLogCleaningJob
 
