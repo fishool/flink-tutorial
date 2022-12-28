@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * flink 自带的source和sink
  * https://nightlies.apache.org/flink/flink-docs-release-1.16/zh/docs/connectors/datastream/overview/
- *
+ * https://www.6aiq.com/article/1649203757609?p=1&m=0
  * @author shichao
  * @description
  * @date 2022/12/5 16:01
